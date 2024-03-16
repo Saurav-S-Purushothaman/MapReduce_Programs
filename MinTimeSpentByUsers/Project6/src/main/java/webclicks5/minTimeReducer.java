@@ -13,7 +13,6 @@ import java.util.HashMap;
 
 public class minTimeReducer extends Reducer<Text, IntWritable, Text, IntWritable>{
 	 private HashMap<Text, Integer> tmap2;
-	 
 	    @Override
 	    public void setup(Context context) throws IOException,
 	                                     InterruptedException
@@ -23,19 +22,17 @@ public class minTimeReducer extends Reducer<Text, IntWritable, Text, IntWritable
 	@Override
 	protected void reduce(Text key, Iterable<IntWritable> value, Context context) throws IOException, InterruptedException{
 	    int sum = 0;
-	
+            // this gets the value
 		for (IntWritable val: value) {
 			sum += val.get();
 		}
 		   tmap2.put(key, sum);
-		
-		
+
 	}
 	@Override
     public void cleanup(Context context) throws IOException,
                                        InterruptedException
     {
-		
 		Map.Entry<Text, Integer> minEntry = null;
         for (Map.Entry<Text, Integer> entry : tmap2.entrySet()) {
             if (minEntry == null || entry.getValue() < minEntry.getValue()) {
@@ -45,4 +42,3 @@ public class minTimeReducer extends Reducer<Text, IntWritable, Text, IntWritable
 		context.write(minEntry.getKey(), new IntWritable(minEntry.getValue()));
         }
     }
-
